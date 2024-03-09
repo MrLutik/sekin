@@ -3,7 +3,7 @@ curl -X POST http://localhost:8080/api/execute -H "Content-Type: application/jso
 -d '{
     "command": "keys-add",
     "args": {
-        "address": "validator",       
+        "address": "genesis",       
         "keyring-backend": "test",
         "home": "/sekai"
     }
