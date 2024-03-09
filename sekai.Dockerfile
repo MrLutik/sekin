@@ -23,9 +23,11 @@ RUN git clone -c http.postBuffer=1048576000 --depth 1 https://github.com/kiracor
 
 FROM golang:1.22 AS caller-builder
 
-COPY . .
+WORKDIR /api
 
-RUN CGO_ENABLED=0 go build -a -tags netgo -installsuffix cgo -o /sekaidCaller ./src/sCaller/sekaidCaller.go
+COPY ./src/sCaller /api
+
+RUN go mod tidy && CGO_ENABLED=0 go build -a -tags netgo -installsuffix cgo -o /sekaidCaller ./cmd/main.go
 
 
 # Run app

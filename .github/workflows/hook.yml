@@ -90,6 +90,3 @@ jobs:
           dd if=/dev/zero of=cosign.key bs=1 count=$(stat --format=%s cosign.key)
           rm -f cosign.key
 
-
-
-

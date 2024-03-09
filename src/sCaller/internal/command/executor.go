@@ -1,0 +1,92 @@
+package command
+
+import (
+	"fmt"
+	"log"
+	"os/exec"
+	"strings"
+)
+
+func SekaiInitCmd(args interface{}) (string, error) {
+	cmdArgs, ok := args.(*SekaiInit)
+
+	if !ok {
+		return "", fmt.Errorf("invalid arguments for 'init'")
+	}
+
+	cmd := exec.Command(ExecPath, "init", "--chain-id", cmdArgs.ChainID,
+		fmt.Sprintf("--overwrite=%v", cmdArgs.Overwrite),
+		"--log_format", cmdArgs.LogFmt,
+		"--log-level", cmdArgs.LogLvl,
+	)
+	output, err := cmd.CombinedOutput()
+
+	return string(output), err
+}
+
+func SekaiVersionCmd(interface{}) (string, error) {
+	cmd := exec.Command(ExecPath, "version")
+	log.Printf("DEBUG: SekaiVersionCmd: cmd: %v", cmd)
+	output, err := cmd.CombinedOutput()
+
+	return string(output), err
+}
+
+func SekaidKeysAddCmd(args interface{}) (string, error) {
+	log.Printf("DEBUG: SekaidKeysAddCmd: in args: %v", args)
+	cmdArgs, ok := args.(*SekaidKeysAdd)
+	if !ok {
+		return "", fmt.Errorf("invalid arguments for 'keys-add'")
+	}
+
+	cmd := exec.Command(ExecPath, "keys", "add", cmdArgs.Address,
+		"--keyring-backend", cmdArgs.Keyring,
+		"--home", cmdArgs.Home,
+		"--log_format", cmdArgs.LogFmt,
+		"--log_level", cmdArgs.LogLvl,
+	)
+
+	if cmdArgs.Output != "" {
+		cmd.Args = append(cmd.Args, "--output", cmdArgs.Output)
+	}
+	if cmdArgs.Recover {
+		cmd.Args = append(cmd.Args, "--recover")
+	}
+	if cmdArgs.Trace {
+		cmd.Args = append(cmd.Args, "--trace")
+	}
+	log.Printf("DEBUG: SekaidKeysAdd: cmd args: %v", cmd.Args)
+	output, err := cmd.CombinedOutput()
+
+	return string(output), err
+}
+
+func SekaiAddGenesisAccCmd(args interface{}) (string, error) {
+	cmdArgs, ok := args.(*SekaiAddGenesisAcc)
+	if !ok {
+		return "", fmt.Errorf("invalid arguments for 'add-genesis-account'")
+	}
+
+	cmd := exec.Command(ExecPath, "add-genesis-account", cmdArgs.Address, strings.Join(cmdArgs.Coins, ","), "--home", cmdArgs.Home, "--keyring-backend", cmdArgs.Keyring, "--log_format", cmdArgs.LogFmt, "--log-level", cmdArgs.LogLvl)
+	if cmdArgs.Trace {
+		cmd.Args = append(cmd.Args, "--trace")
+	}
+
+	output, err := cmd.CombinedOutput()
+	return string(output), err
+}
+
+func SekaiGentxClaimCmd(args interface{}) (string, error) {
+	cmdArgs, ok := args.(*SekaiGentxClaim)
+	if !ok {
+		return "", fmt.Errorf("invalid arguments for 'gentx-claim'")
+	}
+	cmd := exec.Command(ExecPath, "gentx-claim", cmdArgs.Address, "--keyring-backend", cmdArgs.Keyring, "--moniker", cmdArgs.Moniker, "--pubkey", cmdArgs.PubKey, "--home", cmdArgs.Home, "--log_format", cmdArgs.LogFmt, "--log-level", cmdArgs.LogLvl)
+
+	if cmdArgs.Trace {
+		cmd.Args = append(cmd.Args, "--trace")
+	}
+	output, err := cmd.CombinedOutput()
+
+	return string(output), err
+}

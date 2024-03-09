@@ -12,13 +12,35 @@ import (
 )
 
 // CommandWhitelist maps allowed commands to their executable paths.
-var iCallerLog = "/interx/iCaller.log"
+var sCallerLog = "/sekai/sCaller.log"
 
 var CommandWhitelist = map[string]string{
-	"help":    "/interxd",
-	"init":    "/interxd",
-	"start":   "/interxd",
-	"version": "/interxd",
+	"add-genesis-account":       "/sekaid",
+	"collect-gentxs":            "/sekaid",
+	"config":                    "/sekaid",
+	"debug":                     "/sekaid",
+	"export":                    "/sekaid",
+	"export-metadata":           "/sekaid",
+	"export-minimized-genesis":  "/sekaid",
+	"gentx":                     "/sekaid",
+	"gentx-claim":               "/sekaid",
+	"help":                      "/sekaid",
+	"init":                      "/sekaid",
+	"keys":                      "/sekaid",
+	"new-genesis-from-exported": "/sekaid",
+	"query":                     "/sekaid",
+	"q":                         "/sekaid",
+	"rollback":                  "/sekaid",
+	"rosetta":                   "/sekaid",
+	"start":                     "/sekaid",
+	"status":                    "/sekaid",
+	"tendermint":                "/sekaid",
+	"testnet":                   "/sekaid",
+	"tx":                        "/sekaid",
+	"val-address":               "/sekaid",
+	"valcons-address":           "/sekaid",
+	"validate-genesis":          "/sekaid",
+	"version":                   "/sekaid",
 }
 
 func main() {
@@ -47,7 +69,7 @@ func main() {
 }
 
 func setupLogging() {
-	logFile, err := os.OpenFile(iCallerLog, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile(sCallerLog, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening log file: %v", err)
 	}
