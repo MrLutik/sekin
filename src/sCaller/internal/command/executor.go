@@ -5,12 +5,14 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"syscall"
 )
 
 func SekaiInitCmd(args interface{}) (string, error) {
 	cmdArgs, ok := args.(*SekaiInit)
+	re := regexp.MustCompile(`\s+`)
 
 	if !ok {
 		return "", fmt.Errorf("invalid arguments for 'init'")
@@ -19,7 +21,7 @@ func SekaiInitCmd(args interface{}) (string, error) {
 	cmd := exec.Command(ExecPath, "init",
 		"--home", cmdArgs.Home,
 		"--chain-id", cmdArgs.ChainID,
-		fmt.Sprintf("%q", cmdArgs.Moniker),
+		fmt.Sprintf("%v", re.ReplaceAllString(cmdArgs.Moniker, "_")),
 		"--log_level", cmdArgs.LogLvl,
 		"--log_format", cmdArgs.LogFmt,
 	)
@@ -121,6 +123,7 @@ func SekaidStartCmd(args interface{}) (string, error) {
 
 	argv := []string{"sekaid", "start", "--home", cmdArgs.Home}
 	env := os.Environ()
+	log.Printf("DEBUG: SekaidStartCmd: cmd args: %v", fmt.Sprintln(ExecPath, argv, env))
 	err := syscall.Exec(ExecPath, argv, env)
 
 	return "", err
